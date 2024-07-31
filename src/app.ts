@@ -12,7 +12,7 @@ app.use('/api/v1/users', UserRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   const a = 10;
-  res.send(a);
+  res.status(200).json({ a });
 });
 
 export default app;
