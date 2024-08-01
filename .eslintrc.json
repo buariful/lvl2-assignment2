@@ -19,7 +19,8 @@
     "no-unused-expressions": "error",
     "prefer-const": "error", // let use hoise but reassign hoy nai tahole const use korte prefer kore
     "no-console": "warn",
-    "no-undef": "error" //no undefined variables
+    "no-undef": "error", //no undefined variables
+    "@typescript-eslint/no-explicit-any": "warn"
   },
   "globals": {
     "process": "readonly"

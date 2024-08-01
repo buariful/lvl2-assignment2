@@ -16,7 +16,7 @@ import { TAddress, TFullName, TOrder, TUser } from './user.interface';
 
 const fullNameSchema = new Schema<TFullName>({
   firstName: { type: String, required: true },
-  lastName: { type: String },
+  lastName: { type: String, required: true },
 });
 
 const addressSchema = new Schema<TAddress>({
@@ -37,9 +37,9 @@ const userSchema = new Schema<TUser>({
   password: { type: String, required: true },
   fullName: { type: fullNameSchema, required: true },
   age: { type: Number, required: true },
-  email: { type: String },
+  email: { type: String, required: true },
   isActive: { type: Boolean, required: true },
-  hobbies: { type: [String] },
+  hobbies: { type: [String], default: [] },
   address: { type: addressSchema, required: true },
   orders: {
     type: [orderSchema],

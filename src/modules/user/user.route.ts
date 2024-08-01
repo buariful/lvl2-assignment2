@@ -1,13 +1,26 @@
 import express, { Request, Response } from 'express';
-import { UserModel } from './user.model';
+// import { UserModel } from './user.model';
+import { userDataValidationSchema } from './user.validation';
+import { returnErrorResponse, returnSuccessResponse } from '../../utils/utils';
 const router = express.Router();
 
-router.get('/test', async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
   try {
-    const result = await UserModel.find();
-    res.status(200).json({ result });
-  } catch (error) {
-    res.status(400).json({ error });
+    const payload = req.body;
+    const validationParsedData = await userDataValidationSchema.parse(payload);
+    returnSuccessResponse(
+      res,
+      201,
+      'User created successfully!',
+      validationParsedData,
+    );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    let errorMssge = error?.message;
+    if (error.name === 'ZodError') {
+      errorMssge = 'Please provide valid data.';
+    }
+    return returnErrorResponse(res, 400, errorMssge);
   }
 });
 
