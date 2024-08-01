@@ -11,8 +11,7 @@ app.use(cors());
 app.use('/api/users', UserRoutes);
 
 app.get('/', (req: Request, res: Response) => {
-  const a = 10;
-  res.status(200).json({ a });
+  res.status(200).json({ message: 'Server is running smoothly...' });
 });
 
 export default app;

@@ -10,6 +10,9 @@ const createUser = async (userData: TUser) => {
   if (await UserModel.isUserExists(payload?.userId)) {
     throw new Error('User already exists!');
   }
+  if (await UserModel.findByUsername(payload?.username)) {
+    throw new Error('Username already exists!');
+  }
 
   await UserModel.create(payload);
   return userWithoutPassword;
