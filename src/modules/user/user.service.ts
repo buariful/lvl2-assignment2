@@ -6,13 +6,12 @@ const createUser = async (userData: TUser) => {
   const { password, ...userWithoutPassword } = userData;
   const payload = { password, ...userWithoutPassword };
   await userDataValidationSchema.parse(payload);
-  const user = new UserModel(payload);
 
-  if (await user.isUserExists(payload?.userId)) {
+  if (await UserModel.isUserExists(payload?.userId)) {
     throw new Error('User already exists!');
   }
 
-  await user.save();
+  await UserModel.create(payload);
   return userWithoutPassword;
 };
 
@@ -27,7 +26,17 @@ const getAllUsers = async () => {
   return userList;
 };
 
+const getSingleUser = async (userId: number) => {
+  if (!(await await UserModel.isUserExists(userId))) {
+    throw new Error('User not found');
+  }
+
+  const result = await UserModel.findOne({ userId });
+  return result;
+};
+
 export const UserServices = {
   createUser,
   getAllUsers,
+  getSingleUser,
 };

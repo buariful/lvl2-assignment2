@@ -5,7 +5,6 @@ import {
   TFullName,
   TOrder,
   TUser,
-  TUserMethods,
   TUserModel,
 } from './user.interface';
 import config from '../../app/config';
@@ -40,7 +39,7 @@ const orderSchema = new Schema<TOrder>({
   quantity: { type: Number, required: true },
 });
 
-const userSchema = new Schema<TUser, TUserModel, TUserMethods>({
+const userSchema = new Schema<TUser, TUserModel>({
   userId: { type: Number, required: true, unique: true },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -63,8 +62,11 @@ userSchema.pre('save', function (next) {
 userSchema.pre('find', function () {
   this.find().select('-password');
 });
+userSchema.pre('findOne', function () {
+  this.find().select('-password');
+});
 
-userSchema.methods.isUserExists = async function (userId: number) {
+userSchema.statics.isUserExists = async function (userId: number) {
   const existingUser = await UserModel.findOne({ userId });
   return existingUser;
 };

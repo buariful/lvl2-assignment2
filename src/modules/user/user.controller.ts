@@ -28,7 +28,21 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await UserServices.getSingleUser(Number(userId));
+
+    returnSuccessResponse(res, 200, 'User fetched successfully!', result);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return returnErrorResponse(res, 400, error?.message);
+  }
+};
+
 export const userControllers = {
   createUser,
   getAllUsers,
+  getSingleUser,
 };
