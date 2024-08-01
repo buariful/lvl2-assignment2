@@ -16,6 +16,18 @@ const createUser = async (userData: TUser) => {
   return userWithoutPassword;
 };
 
+const getAllUsers = async () => {
+  const userList = await UserModel.find({}).select([
+    'username',
+    'fullName',
+    'age',
+    'email',
+    'address',
+  ]);
+  return userList;
+};
+
 export const UserServices = {
   createUser,
+  getAllUsers,
 };

@@ -60,6 +60,10 @@ userSchema.pre('save', function (next) {
   next();
 });
 
+userSchema.pre('find', function () {
+  this.find().select('-password');
+});
+
 userSchema.methods.isUserExists = async function (userId: number) {
   const existingUser = await UserModel.findOne({ userId });
   return existingUser;
