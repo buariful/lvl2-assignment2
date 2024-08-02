@@ -55,9 +55,24 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateUserOrders = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const payload = req.body;
+    await UserServices.updateOrders(Number(userId), payload);
+
+    returnSuccessResponse(res, 200, 'Order created successfully!', null);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return returnErrorResponse(res, 400, error?.message);
+  }
+};
+
 export const userControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
   updateUser,
+  updateUserOrders,
 };

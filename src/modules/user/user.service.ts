@@ -1,6 +1,9 @@
-import { TUser } from './user.interface';
+import { TOrder, TUser } from './user.interface';
 import { UserModel } from './user.model';
-import { userDataValidationSchema } from './user.validation';
+import {
+  orderDataValidationSchema,
+  userDataValidationSchema,
+} from './user.validation';
 
 const createUser = async (userData: TUser) => {
   const { password, ...userWithoutPassword } = userData;
@@ -41,6 +44,8 @@ const getSingleUser = async (userId: number) => {
 const updateUser = async (userId: number, userData: TUser) => {
   const { password, ...userWithoutPassword } = userData;
   const payload = { password, ...userWithoutPassword };
+  await userDataValidationSchema.parse(payload);
+
   const userFindById = await UserModel.isUserExists(userId);
   const userFindByUsername = await UserModel.findByUsername(payload?.username);
 
@@ -62,9 +67,23 @@ const updateUser = async (userId: number, userData: TUser) => {
   return userWithoutPassword;
 };
 
+const updateOrders = async (userId: number, orderData: TOrder) => {
+  const user = await UserModel.isUserExists(userId);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  orderDataValidationSchema.parse(orderData);
+  const userOrders = user?.orders ?? [];
+  userOrders.push(orderData);
+
+  return await UserModel.updateOne({ userId }, { orders: userOrders });
+};
+
 export const UserServices = {
   createUser,
   getAllUsers,
   getSingleUser,
   updateUser,
+  updateOrders,
 };

@@ -10,16 +10,7 @@ const addressValidationSchema = z.object({
   city: z.string(),
   country: z.string(),
 });
-/* 
-age: { type: Number, required: true },
-  email: { type: String, required: true },
-  isActive: { type: Boolean, required: true },
-  hobbies: { type: [String], default: [] },
-  address: { type: addressSchema, required: true },
-  orders: {
-    type: [orderSchema],
-  },
-*/
+
 export const userDataValidationSchema = z.object({
   userId: z.number(),
   username: z.string(),
@@ -30,4 +21,10 @@ export const userDataValidationSchema = z.object({
   isActive: z.boolean(),
   hobbies: z.array(z.string()),
   address: addressValidationSchema,
+});
+
+export const orderDataValidationSchema = z.object({
+  productName: z.string(),
+  price: z.number(),
+  quantity: z.number(),
 });
