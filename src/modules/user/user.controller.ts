@@ -55,6 +55,19 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    await UserServices.deleteUser(Number(userId));
+
+    returnSuccessResponse(res, 200, 'User deleted successfully!', null);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return returnErrorResponse(res, 400, error?.message);
+  }
+};
+
 const updateUserOrders = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -82,11 +95,27 @@ const getUserOrders = async (req: Request, res: Response) => {
   }
 };
 
+const getUserTotalOrderPrice = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await UserServices.getUserTotalOrderPrice(Number(userId));
+    returnSuccessResponse(res, 200, 'Total price calculated successfully!', {
+      totalPrice: result,
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return returnErrorResponse(res, 400, error?.message);
+  }
+};
+
 export const userControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
   updateUser,
+  deleteUser,
   updateUserOrders,
   getUserOrders,
+  getUserTotalOrderPrice,
 };

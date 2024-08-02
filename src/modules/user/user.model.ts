@@ -52,6 +52,10 @@ const userSchema = new Schema<TUser, TUserModel>({
   orders: {
     type: [orderSchema],
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 userSchema.pre('save', function (next) {
@@ -60,10 +64,10 @@ userSchema.pre('save', function (next) {
 });
 
 userSchema.pre('find', function () {
-  this.find().select('-password');
+  this.find({ isDeleted: false }).select('-password');
 });
 userSchema.pre('findOne', function () {
-  this.find().select('-password');
+  this.find({ isDeleted: false }).select('-password');
 });
 
 userSchema.statics.isUserExists = async function (userId: number) {

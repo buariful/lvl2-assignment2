@@ -67,6 +67,14 @@ const updateUser = async (userId: number, userData: TUser) => {
   return userWithoutPassword;
 };
 
+const deleteUser = async (userId: number) => {
+  if (!(await UserModel.isUserExists(userId))) {
+    throw new Error('User not found');
+  }
+
+  return await UserModel.updateOne({ userId }, { isDeleted: true });
+};
+
 const updateOrders = async (userId: number, orderData: TOrder) => {
   const user = await UserModel.isUserExists(userId);
   if (!user) {
@@ -88,12 +96,26 @@ const getUserOrders = async (userId: number) => {
 
   return user?.orders;
 };
+const getUserTotalOrderPrice = async (userId: number) => {
+  const user = await UserModel.isUserExists(userId);
+  if (!user) {
+    throw new Error('User not found');
+  }
+  let totalPrice = 0;
+  const orders = user?.orders ?? [];
+  for (let i = 0; i < orders.length; i++) {
+    totalPrice += orders[i]?.price;
+  }
+  return totalPrice;
+};
 
 export const UserServices = {
   createUser,
   getAllUsers,
   getSingleUser,
   updateUser,
+  deleteUser,
   updateOrders,
   getUserOrders,
+  getUserTotalOrderPrice,
 };
