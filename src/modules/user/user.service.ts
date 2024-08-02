@@ -80,10 +80,20 @@ const updateOrders = async (userId: number, orderData: TOrder) => {
   return await UserModel.updateOne({ userId }, { orders: userOrders });
 };
 
+const getUserOrders = async (userId: number) => {
+  const user = await UserModel.isUserExists(userId);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return user?.orders;
+};
+
 export const UserServices = {
   createUser,
   getAllUsers,
   getSingleUser,
   updateUser,
   updateOrders,
+  getUserOrders,
 };
