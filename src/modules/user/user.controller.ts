@@ -41,8 +41,23 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const payload = req.body;
+    const result = await UserServices.updateUser(Number(userId), payload);
+
+    returnSuccessResponse(res, 200, 'User fetched successfully!', result);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return returnErrorResponse(res, 400, error?.message);
+  }
+};
+
 export const userControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
+  updateUser,
 };

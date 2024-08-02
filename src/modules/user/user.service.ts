@@ -38,8 +38,33 @@ const getSingleUser = async (userId: number) => {
   return result;
 };
 
+const updateUser = async (userId: number, userData: TUser) => {
+  const { password, ...userWithoutPassword } = userData;
+  const payload = { password, ...userWithoutPassword };
+  const userFindById = await UserModel.isUserExists(userId);
+  const userFindByUsername = await UserModel.findByUsername(payload?.username);
+
+  if (!userFindById?.userId) {
+    throw new Error('User not found!');
+  }
+  if (
+    userId !== userData?.userId &&
+    (await UserModel.isUserExists(userData?.userId))
+  ) {
+    throw new Error('UserId exists, use another one!');
+  }
+  // if another user exist with the same username
+  if (userId !== userFindByUsername?.userId && userFindByUsername) {
+    throw new Error('Username exists, use another one!');
+  }
+
+  await UserModel.findOneAndUpdate({ userId }, userData);
+  return userWithoutPassword;
+};
+
 export const UserServices = {
   createUser,
   getAllUsers,
   getSingleUser,
+  updateUser,
 };
